@@ -1,0 +1,57 @@
+<div class="card bg-white shadow-sm" style="min-width: 300px;">
+  <div class="card-header bg-primary-gradient-dark text-white d-flex justify-content-between align-items-center">
+    <h5 class="card-title mb-0 cursor-pointer text-white" (click)="onEditList()" title="Click to edit">
+      {{ list.title }}
+    </h5>
+    <div class="dropdown">
+      <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        <i class="bi bi-three-dots"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#" (click)="onEditList(); $event.preventDefault()">
+          <i class="bi bi-pencil me-2"></i>Edit List
+        </a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="#" (click)="onDeleteList(); $event.preventDefault()">
+          <i class="bi bi-trash me-2"></i>Delete List
+        </a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="card-body">
+    <div 
+      class="mb-3" 
+      cdkDropList 
+      [id]="list.id"
+      [cdkDropListData]="list.tasks"
+      cdkDropListSortingDisabled="false"
+      (cdkDropListDropped)="onTaskDrop($event)"
+      style="min-height: 50px;">
+      @for (task of list.tasks; track task.id) {
+        <div cdkDrag [cdkDragData]="task">
+          <app-task 
+            [task]="task" 
+            [listId]="list.id"
+            (deleteTask)="onDeleteTask($event)">
+          </app-task>
+          <div class="cdk-drag-placeholder"></div>
+        </div>
+      }
+      @if (list.tasks.length === 0) {
+        <div class="alert alert-info border-0 text-center py-3 mb-2" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);">
+          <i class="bi bi-plus-circle text-primary me-2"></i>
+          <small class="text-primary">No tasks yet - click below to add one!</small>
+        </div>
+      }
+    </div>
+    <button class="btn btn-blue-dark btn-sm w-100" (click)="onAddTask()">
+      <i class="bi bi-plus me-1"></i>Add a task
+    </button>
+  </div>
+  <div class="card-footer bg-light">
+    <small class="text-blue fw-semibold">
+      <i class="bi bi-list-task me-1"></i>
+      {{ list.tasks.length }} task{{ list.tasks.length !== 1 ? 's' : '' }}
+    </small>
+  </div>
+</div>
